@@ -6,6 +6,9 @@ import pandas
 import json
 
 THEME_COLOR = "#1135a7"
+LIGHT_BLUE_COLOR = "#1135bf"
+LIGHTER_BLUE_COLOR = "#1135de"
+
 data_file = pandas.read_csv("data.csv")
 data_file_name = list(data_file["name"])
 data_file_data = list(data_file["data"])
@@ -52,7 +55,8 @@ i = 0
 
 def framing():
     global main_frame
-    window.config(padx =0, pady=0)
+    window.config(padx=0, pady=0)
+    window.geometry("620x750")
     main_frame = tkinter.Frame(window)
     main_frame.pack(fill=tkinter.BOTH, expand=1)
 
@@ -96,7 +100,7 @@ def prev_button_com():
 
 def display_data():
     global date, address, max_temp, min_temp, avg_temp, wind_speed, total_prec, avg_humidity, chance_of_prec, chance_of_snow, condition_text, condition_icon, sunrise, sunset, moonrise, moonset, moon_phase, uv, avg_visibility
-    global date_label, address_label, icon_label, temp_label, ch_prec_label, ch_snow_label, details_1_label, sunrise_label, sunset_label, moonrise_label, moonset_label, moonphase_label, details_2_label, prec_label, hum_label, wind_speed_label, vis_label, next_button, prev_button
+    global next_button, prev_button, astroFrame, detailsFrame, hourlyFrame, introFrame
     global i
     global hour_data
     global main_frame
@@ -105,116 +109,120 @@ def display_data():
         zip_code_label1.destroy()
         zip_code_entry2.destroy()
         zip_code_label2.destroy()
+        zip_code_entry3.destroy()
+        zip_code_label3.destroy()
         zip_code_button.destroy()
         title.destroy()
     except NameError:
         pass
     try:
-        date_label.destroy()
-        address_label.destroy()
-        icon_label.destroy()
-        temp_label.destroy()
-        ch_snow_label.destroy()
-        ch_prec_label.destroy()
-        details_1_label.destroy()
-        sunrise_label.destroy()
-        sunset_label.destroy()
-        moonrise_label.destroy()
-        moonset_label.destroy()
-        moonphase_label.destroy()
-        details_2_label.destroy()
-        prec_label.destroy()
-        hum_label.destroy()
-        wind_speed_label.destroy()
-        vis_label.destroy()
+        for widgets in introFrame.winfo_children():
+            widgets.destroy()
+        for widgets in astroFrame.winfo_children():
+            widgets.destroy()
+        for widgets in detailsFrame.winfo_children():
+            widgets.destroy()
+        for widgets in hourlyFrame.winfo_children():
+            widgets.destroy()
+        astroFrame.destroy()
+        detailsFrame.destroy()
+        hourlyFrame.destroy()
+        introFrame.destroy()
         main_frame.destroy()
     except NameError:
         pass
     second_frame = framing()
-    date_label = tkinter.Label(second_frame, text=date[i], font=("Century Schoolbook", 25), fg="white", width=17, anchor="w",
+    introFrame = tkinter.LabelFrame(second_frame, bg=THEME_COLOR, width=600, highlightthickness=0, bd=0)
+    astroFrame = tkinter.LabelFrame(second_frame, text="Astrology", width=600, height=200, labelanchor="n", font=('"Century Schoolbook" 14 bold'), foreground="white", bg=LIGHT_BLUE_COLOR, highlightthickness=0, bd=5)
+    detailsFrame = tkinter.LabelFrame(second_frame, text="Details", width=600, height=200, labelanchor="n", font=('"Century Schoolbook" 14 bold'), foreground="white", bg=LIGHT_BLUE_COLOR, highlightthickness=0, bd=5)
+    hourlyFrame = tkinter.LabelFrame(second_frame, text="Hourly Forecast", width=600, height=200, labelanchor="n", font=('"Century Schoolbook" 14 bold'), foreground="white", bg=LIGHT_BLUE_COLOR, highlightthickness=0, bd=5)
+
+    date_label = tkinter.Label(introFrame, text=date[i], font=("Century Schoolbook", 25), fg="white", width=17, anchor="w",
                                bg=THEME_COLOR)
-    address_label = tkinter.Label(second_frame, text=address, font=("Century Schoolbook", 23), fg="white", width=19, anchor="w",
+    address_label = tkinter.Label(introFrame, text=address, font=("Century Schoolbook", 23), fg="white", width=19, anchor="w",
                                   bg=THEME_COLOR, justify=tkinter.LEFT)
-    icon_label = tkinter.Label(second_frame, image=condition_icon[i], text=condition_text[i], compound=tkinter.LEFT, width=360,
+    icon_label = tkinter.Label(introFrame, image=condition_icon[i], text=condition_text[i], compound=tkinter.LEFT, width=360,
                                font=("Century Schoolbook", 23), anchor="w", fg="white", bg=THEME_COLOR)
-    temp_label = tkinter.Label(second_frame, text=f"↑ {max_temp[i]}°C\t\t↓ {min_temp[i]}°C", fg="white",
+    temp_label = tkinter.Label(introFrame, text=f"↑ {max_temp[i]}°C\t\t↓ {min_temp[i]}°C", fg="white",
                                font=("Century Schoolbook", 10), width=46, anchor="w", bg=THEME_COLOR)
-    ch_prec_label = tkinter.Label(second_frame, text=f"☔ {chance_of_prec[i]}%", font=("Century Schoolbook", 12), bg=THEME_COLOR,
+    ch_prec_label = tkinter.Label(introFrame, text=f"☔ {chance_of_prec[i]}%", font=("Century Schoolbook", 12), bg=THEME_COLOR,
                                   fg="white", pady=1)
-    ch_snow_label = tkinter.Label(second_frame, text=f"❄ {chance_of_snow[i]}%", font=("Century Schoolbook", 12), bg=THEME_COLOR,
+    ch_snow_label = tkinter.Label(introFrame, text=f"❄ {chance_of_snow[i]}%", font=("Century Schoolbook", 12), bg=THEME_COLOR,
                                   fg="white", pady=1)
-    details_1_label = tkinter.Label(second_frame, text="Astrology", fg="white", font=("Century Schoolbook", 16), width=29, anchor="w",
-                                    bg=THEME_COLOR)
-    sunrise_label = tkinter.Label(second_frame, text=f"Time Of Sunrise: {sunrise[i]}", bg=THEME_COLOR, fg="white",
-                                  font=("Century Schoolbook", 10), width=22, anchor="w")
-    sunset_label = tkinter.Label(second_frame, text=f"Time Of Sunset: {sunset[i]}", bg=THEME_COLOR, fg="white",
-                                 font=("Century Schoolbook", 10), width=22, anchor="w")
-    moonrise_label = tkinter.Label(second_frame, text=f"Time Of Moonrise: {moonrise[i]}", bg=THEME_COLOR, fg="white",
+    sunrise_label = tkinter.Label(astroFrame, text=f"Time Of Sunrise: {sunrise[i]}", bg=LIGHT_BLUE_COLOR, fg="white",
+                                  font=("Century Schoolbook", 10), width=46, anchor="w")
+    sunset_label = tkinter.Label(astroFrame, text=f"Time Of Sunset: {sunset[i]}", bg=LIGHT_BLUE_COLOR, fg="white",
+                                 font=("Century Schoolbook", 10), width=46, anchor="w")
+    moonrise_label = tkinter.Label(astroFrame, text=f"Time Of Moonrise: {moonrise[i]}", bg=LIGHT_BLUE_COLOR, fg="white",
                                    font=("Century Schoolbook", 10), width=21, anchor="w")
-    moonset_label = tkinter.Label(second_frame, text=f"Time Of Moonset: {moonset[i]}", bg=THEME_COLOR, fg="white",
+    moonset_label = tkinter.Label(astroFrame, text=f"Time Of Moonset: {moonset[i]}", bg=LIGHT_BLUE_COLOR, fg="white",
                                   font=("Century Schoolbook", 10), width=21, anchor="w")
-    moonphase_label = tkinter.Label(second_frame, text=f"Moon Phase: {moon_phase[i]}", bg=THEME_COLOR, fg="white",
+    moonphase_label = tkinter.Label(astroFrame, text=f"Moon Phase: {moon_phase[i]}", bg=LIGHT_BLUE_COLOR, fg="white",
                                     font=("Century Schoolbook", 10), width=46, anchor="w")
-    details_2_label = tkinter.Label(second_frame, text="Details", fg="white", font=("Century Schoolbook", 16), width=29, anchor="w",
-                                    bg=THEME_COLOR)
-    prec_label = tkinter.Label(second_frame, text=f"Precipitation: {total_prec[i]} mm", bg=THEME_COLOR, fg="white",
-                               font=("Century Schoolbook", 10), width=22, anchor="w")
-    hum_label = tkinter.Label(second_frame, text=f"Humidity: {avg_humidity[i]}", bg=THEME_COLOR, fg="white",
-                              font=("Century Schoolbook", 10), width=22, anchor="w")
-    wind_speed_label = tkinter.Label(second_frame, text=f"Wind Speed: {wind_speed[i]} km/h", bg=THEME_COLOR, fg="white",
+    prec_label = tkinter.Label(detailsFrame, text=f"Precipitation: {total_prec[i]} mm", bg=LIGHT_BLUE_COLOR, fg="white",
+                               font=("Century Schoolbook", 10), width=46, anchor="w")
+    hum_label = tkinter.Label(detailsFrame, text=f"Humidity: {avg_humidity[i]}", bg=LIGHT_BLUE_COLOR, fg="white",
+                              font=("Century Schoolbook", 10), width=46, anchor="w")
+    wind_speed_label = tkinter.Label(detailsFrame, text=f"Wind Speed: {wind_speed[i]} km/h", bg=LIGHT_BLUE_COLOR, fg="white",
                                      font=("Century Schoolbook", 10), width=21, anchor="w")
-    vis_label = tkinter.Label(second_frame, text=f"Visibility: {avg_visibility[i]} kms.", bg=THEME_COLOR, fg="white",
+    vis_label = tkinter.Label(detailsFrame, text=f"Visibility: {avg_visibility[i]} kms.", bg=LIGHT_BLUE_COLOR, fg="white",
                               font=("Century Schoolbook", 10), width=21, anchor="w")
-    details_3_label = tkinter.Label(second_frame, text="Hourly Forecast", fg="white", font=("Century Schoolbook", 16), width=29, anchor="w",
-                                    bg=THEME_COLOR)
+
     next_button = tkinter.Button(second_frame, text="Next", fg="white", bg=THEME_COLOR, command=next_button_com)
     prev_button = tkinter.Button(second_frame, text="Previous", fg="white", bg=THEME_COLOR, command=prev_button_com)
 
+    date_label.grid(row=0, column=0, pady=(5, 0), padx=(1, 10), columnspan=3)
+    address_label.grid(row=1, column=0, pady=(0, 40), padx=(1, 10), columnspan=3)
+    icon_label.grid(row=2, column=0, pady=(40, 0), padx=(1, 10), rowspan=2, columnspan=3)
+    temp_label.grid(row=4, column=0, pady=(0, 40), padx=(1, 1), columnspan=3)
+    ch_prec_label.grid(row=2, column=3, pady=(40, 0), padx=(10, 0))
+    ch_snow_label.grid(row=3, column=3, pady=(0, 0), padx=(10, 0))
 
-    date_label.grid(row=0, column=0, pady=(5, 0), padx=(1, 10), columnspan=2)
-    address_label.grid(row=1, column=0, pady=(0, 40), padx=(1, 10), columnspan=2)
-    icon_label.grid(row=2, column=0, pady=(40, 0), padx=(1, 10), rowspan=2, columnspan=2)
-    temp_label.grid(row=4, column=0, pady=(0, 40), padx=(1, 1), columnspan=2)
-    ch_prec_label.grid(row=2, column=2, pady=(40, 0), padx=(10, 0))
-    ch_snow_label.grid(row=3, column=2, pady=(0, 0), padx=(10, 0))
-    details_1_label.grid(row=5, column=0, pady=(40, 1), padx=(1, 1), columnspan=2)
-    sunrise_label.grid(row=6, column=0, pady=(1, 1), padx=(1, 10))
-    sunset_label.grid(row=7, column=0, pady=(1, 1), padx=(1, 10))
-    moonrise_label.grid(row=6, column=1, pady=(1, 1), padx=(1, 10))
-    moonset_label.grid(row=7, column=1, pady=(1, 1), padx=(1, 10))
-    moonphase_label.grid(row=8, column=0, pady=(1, 40), padx=(1, 10), columnspan=2)
-    details_2_label.grid(row=9, column=0, pady=(40, 1), padx=(1, 1), columnspan=2)
-    prec_label.grid(row=10, column=0, pady=(1, 1), padx=(1, 10))
-    hum_label.grid(row=11, column=0, pady=(1, 40), padx=(1, 10))
-    wind_speed_label.grid(row=10, column=1, pady=(1, 1), padx=(1, 10))
-    vis_label.grid(row=11, column=1, pady=(1, 40), padx=(1, 10))
-    details_3_label.grid(row=12, column=0, pady=(40, 1), padx=(1, 1), columnspan=2)
+    sunrise_label.grid(row=0, column=0, pady=(20, 1), padx=(1, 10))
+    sunset_label.grid(row=1, column=0, pady=(1, 1), padx=(1, 10))
+    moonrise_label.grid(row=0, column=2, pady=(20, 1), padx=(1, 10))
+    moonset_label.grid(row=1, column=2, pady=(1, 1), padx=(1, 10))
+    moonphase_label.grid(row=2, column=0, pady=(1, 20), padx=(1, 10), columnspan=2)
 
-    x = 12
+    prec_label.grid(row=0, column=0, pady=(20, 1), padx=(1, 10))
+    hum_label.grid(row=1, column=0, pady=(1, 20), padx=(1, 10))
+    wind_speed_label.grid(row=0, column=1, pady=(20, 1), padx=(1, 10))
+    vis_label.grid(row=1, column=1, pady=(1, 20), padx=(1, 10))
+
     for j in range(0, 24):
-        row_num = x + (j * 4) + 1
-        time_label = tkinter.Label(second_frame, text=f"Time: {hour_data[i][j][0]}", fg="white", font=("Century Schoolbook", 12),
-                                   width=37, anchor="w", bg=THEME_COLOR)
-        con_label = tkinter.Label(second_frame, image=hour_data[i][j][1], text=f"{hour_data[i][j][2]}", compound=tkinter.LEFT,
+        row_num = (j * 4) + 1
+        tempFrame = tkinter.LabelFrame(hourlyFrame, bg=LIGHTER_BLUE_COLOR, highlightthickness=0, bd=0)
+        time_label = tkinter.Label(tempFrame, text=f"Time: {hour_data[i][j][0]}", fg="white", font=("Century Schoolbook", 12),
+                                   width=37, anchor="w", bg=LIGHTER_BLUE_COLOR)
+        con_label = tkinter.Label(tempFrame, image=hour_data[i][j][1], text=f"{hour_data[i][j][2]}", compound=tkinter.LEFT,
                                   width=360, font=("Century Schoolbook", 14), anchor="w", fg="white",
-                                  bg=THEME_COLOR)
-        temp_hour_label = tkinter.Label(second_frame, text=f"{hour_data[i][j][3]}°C", compound=tkinter.LEFT, width=8,
-                                        font=("Century Schoolbook", 25), anchor="w", fg="white", bg=THEME_COLOR)
-        feel_temp_label = tkinter.Label(second_frame, text=f"Feels like: {hour_data[i][j][4]}°C", bg=THEME_COLOR, fg="white",
+                                  bg=LIGHTER_BLUE_COLOR)
+        temp_hour_label = tkinter.Label(tempFrame, text=f"{hour_data[i][j][3]}°C", compound=tkinter.LEFT, width=8,
+                                        font=("Century Schoolbook", 25), anchor="w", fg="white", bg=LIGHTER_BLUE_COLOR)
+        feel_temp_label = tkinter.Label(tempFrame, text=f"Feels like: {hour_data[i][j][4]}°C", bg=LIGHTER_BLUE_COLOR, fg="white",
                                         font=("Century Schoolbook", 10), width=21, anchor="w")
-        prec_hour_label = tkinter.Label(second_frame, text=f"☔ {hour_data[i][j][5]}%", bg=THEME_COLOR, fg="white",
+        prec_hour_label = tkinter.Label(tempFrame, text=f"☔ {hour_data[i][j][5]}%", bg=LIGHTER_BLUE_COLOR, fg="white",
                                         font=("Century Schoolbook", 10), width=21, anchor="w")
-        snow_hour_label = tkinter.Label(second_frame, text=f"❄ {hour_data[i][j][6]}%", bg=THEME_COLOR, fg="white",
+        snow_hour_label = tkinter.Label(tempFrame, text=f"❄ {hour_data[i][j][6]}%", bg=LIGHTER_BLUE_COLOR, fg="white",
                                         font=("Century Schoolbook", 10), width=21, anchor="w")
-        time_label.grid(row=row_num, column=0, pady=(0, 1), padx=(1, 1), columnspan=2)
-        con_label.grid(row=row_num + 1, column=0, pady=(1, 1), padx=(1, 10), rowspan=2, columnspan=2)
-        temp_hour_label.grid(row=row_num + 1, column=2, pady=(1, 1), padx=(1, 10), rowspan=2)
-        feel_temp_label.grid(row=row_num + 3, column=0, pady=(1, 40), padx=(1, 10))
-        prec_hour_label.grid(row=row_num + 3, column=1, pady=(1, 40), padx=(1, 10))
-        snow_hour_label.grid(row=row_num + 3, column=2, pady=(1, 40), padx=(1, 10))
+        if j == 0:
+            time_label.grid(row=0, column=0, pady=(40, 1), padx=(1, 1), columnspan=2)
+        else:
+            time_label.grid(row=0, column=0, pady=(0, 1), padx=(1, 1), columnspan=2)
+        con_label.grid(row=1, column=0, pady=(1, 1), padx=(1, 10), rowspan=2, columnspan=2)
+        temp_hour_label.grid(row=1, column=2, pady=(1, 1), padx=(1, 10), rowspan=2)
+        feel_temp_label.grid(row=3, column=0, pady=(1, 40), padx=(1, 10))
+        prec_hour_label.grid(row=3, column=1, pady=(1, 40), padx=(1, 10))
+        snow_hour_label.grid(row=3, column=2, pady=(1, 40), padx=(1, 10))
 
-    next_button.grid(row=109, column=1, pady=(20, 1), padx=(1, 1), columnspan=2)
-    prev_button.grid(row=109, column=0, pady=(20, 1), padx=(1, 1))
+        tempFrame.grid(row=j, column=0, pady=(20, 20), padx=(5, 5), columnspan=3)
+
+    introFrame.pack(padx=10, pady=20, expand=True, fill=tkinter.BOTH)
+    astroFrame.pack(padx=10, pady=20, expand=True, fill=tkinter.BOTH)
+    detailsFrame.pack(padx=10, pady=20, expand=True, fill=tkinter.BOTH)
+    hourlyFrame.pack(padx=10, pady=20, expand=True, fill=tkinter.BOTH)
+    prev_button.pack(padx=10, pady=20, expand=True, fill=tkinter.BOTH)
+    next_button.pack(padx=10, pady=20, expand=True, fill=tkinter.BOTH)
 
 
 def arrange_data_hourly(data):
@@ -292,45 +300,35 @@ def get_forecast():
     response = requests.get(url=WEATHER_API, params=params)
     response.raise_for_status()
     data = response.json()
-    with open("weather.json", "w") as file:
-        json.dump(data, file, indent=4)
     arrange_forecast_data(data)
     return
 
 
 def get_my_coordinates():
-    geo_address = zip_code_entry1.get()
-    zip_code = zip_code_entry2.get()
-    if zip_code == "":
-        messagebox.showerror(title="Error", message="Please enter zip-code!")
-        return
-    try:
-        int(zip_code)
-    except ValueError:
-        pass
+    geo_address_city = zip_code_entry1.get()
+    geo_address_state = zip_code_entry2.get()
+    geo_address_country = zip_code_entry3.get()
     global params
     params["key"] = GEOLOC_API_KEY
-    params["location"] = f"{geo_address}, {zip_code}"
+    params["location"] = f"{geo_address_city}, {geo_address_state}, {geo_address_country}"
     response = requests.get(url=GEOLOC_API, params=params)
     response.raise_for_status()
     data = response.json()
     data = data["results"]
-    with open("loc.json", "w") as file:
-        json.dump(data, file, indent=4)
     global my_lat
     global my_lng
     my_lat = data[0]["locations"][0]["displayLatLng"]["lat"]
     my_lng = data[0]["locations"][0]["displayLatLng"]["lng"]
-    with open("loc.json", "w") as file:
-        json.dump(data, file, indent=4)
     get_forecast()
     return
 
 
-zip_code_label1 = tkinter.Label(text="Address:", bg=THEME_COLOR, fg="white")
+zip_code_label1 = tkinter.Label(text="City:", bg=THEME_COLOR, fg="white")
 zip_code_entry1 = tkinter.Entry(width=20)
-zip_code_label2 = tkinter.Label(text="Pin-Code/Zip-Code:", bg=THEME_COLOR, fg="white")
+zip_code_label2 = tkinter.Label(text="State:", bg=THEME_COLOR, fg="white")
 zip_code_entry2 = tkinter.Entry(width=20)
+zip_code_label3 = tkinter.Label(text="Country:", bg=THEME_COLOR, fg="white")
+zip_code_entry3 = tkinter.Entry(width=20)
 zip_code_button = tkinter.Button(text="Give Me Today's Forecast", bg=THEME_COLOR, fg="white", relief="ridge",
                                  command=get_my_coordinates)
 
@@ -340,5 +338,7 @@ zip_code_label1.grid(row=1, column=0, pady=(1, 10))
 zip_code_entry1.grid(row=1, column=1, pady=(1, 10))
 zip_code_label2.grid(row=2, column=0, pady=(1, 10))
 zip_code_entry2.grid(row=2, column=1, pady=(1, 10))
-zip_code_button.grid(row=3, column=0, columnspan=2, pady=(1, 10))
+zip_code_label3.grid(row=3, column=0, pady=(1, 10))
+zip_code_entry3.grid(row=3, column=1, pady=(1, 10))
+zip_code_button.grid(row=4, column=0, columnspan=2, pady=(1, 10))
 window.mainloop()
