@@ -1,5 +1,5 @@
 name,data
-WEATHER_API_KEY,d54c0acc9d8646c1819173626221506
+WEATHER_API_KEY,
 WEATHER_API,https://api.weatherapi.com/v1/forecast.json
-GEOLOC_API_KEY,47wVPJE8MjxtesQi4SjrS2ujAhHBa6Ag
+GEOLOC_API_KEY,
 GEOLOC_API,http://www.mapquestapi.com/geocoding/v1/address
